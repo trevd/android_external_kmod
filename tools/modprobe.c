@@ -882,7 +882,7 @@ static int do_modprobe(int argc, char **orig_argv)
 	if (root != NULL || kversion != NULL) {
 		struct utsname u;
 		if (root == NULL)
-			root = "";
+			root = "/system";
 		if (kversion == NULL) {
 			if (uname(&u) < 0) {
 				ERR("uname() failed: %m\n");

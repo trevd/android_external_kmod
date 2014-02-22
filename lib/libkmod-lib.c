@@ -196,7 +196,7 @@ static int log_priority(const char *priority)
 	return 0;
 }
 
-static const char *dirname_default_prefix = "/lib/modules";
+static const char *dirname_default_prefix = "/system/lib/modules";
 
 static char *get_kernel_release(const char *dirname)
 {

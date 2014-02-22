@@ -421,7 +421,7 @@ static int do_modinfo(int argc, char** argv)
 	if (root != NULL || kversion != NULL) {
 		struct utsname u;
 		if (root == NULL)
-			root = "";
+			root = "/system";
 		if (kversion == NULL) {
 			if (uname(&u) < 0) {
 				ERR("uname() failed: %m\n");
