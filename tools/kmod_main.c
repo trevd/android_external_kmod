@@ -165,7 +165,7 @@ int main(int argc, char *argv[])
 {
 	int err;
 
-	if (strcmp(basename(argv[0]), "kmod") == 0)
+	if ((strncmp(basename(argv[0]), "kmod",4) == 0) || (strncmp(basename(argv[0]), "kmod_static",11) == 0) )
 		err = handle_kmod_commands(argc, argv);
 	else
 		err = handle_kmod_compat_commands(argc, argv);
