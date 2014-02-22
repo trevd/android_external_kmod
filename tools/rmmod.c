@@ -25,6 +25,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <libgen.h>
 #include "libkmod.h"
 #include "macro.h"
 
@@ -44,7 +45,7 @@ static const struct option cmdopts[] = {
 	{NULL, 0, 0, 0}
 };
 
-static void help(void)
+static void help(int argc, char *argv[])
 {
 	printf("Usage:\n"
 		"\t%s [options] modulename ...\n"
@@ -56,7 +57,7 @@ static void help(void)
 		"\t-v, --verbose     enables more messages\n"
 		"\t-V, --version     show version\n"
 		"\t-h, --help        show this help\n",
-		program_invocation_short_name);
+		basename(argv[0]));
 }
 
 static int check_module_inuse(struct kmod_module *mod) {
@@ -99,7 +100,7 @@ static int check_module_inuse(struct kmod_module *mod) {
 	return 0;
 }
 
-static int do_rmmod(int argc, char *argv[])
+static int do_rmmod(int argc, char**argv)
 {
 	struct kmod_ctx *ctx;
 	const char *null_config = NULL;
@@ -122,7 +123,7 @@ static int do_rmmod(int argc, char *argv[])
 			verbose++;
 			break;
 		case 'h':
-			help();
+			help(argc,argv);
 			return EXIT_SUCCESS;
 		case 'V':
 			puts(PACKAGE " version " VERSION);

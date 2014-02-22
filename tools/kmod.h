@@ -32,8 +32,9 @@ extern const struct kmod_cmd kmod_cmd_compat_rmmod;
 extern const struct kmod_cmd kmod_cmd_compat_insmod;
 extern const struct kmod_cmd kmod_cmd_compat_modinfo;
 extern const struct kmod_cmd kmod_cmd_compat_modprobe;
+#ifdef _GNU_SOURCE
 extern const struct kmod_cmd kmod_cmd_compat_depmod;
-
+#endif
 extern const struct kmod_cmd kmod_cmd_list;
 extern const struct kmod_cmd kmod_cmd_static_nodes;
 

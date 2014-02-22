@@ -20,6 +20,7 @@
  */
 
 #include <stdio.h>
+#include <fcntl.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdarg.h>
@@ -30,7 +31,9 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <dirent.h>
-
+#ifndef _GNU_SOURCE
+#include <libgen.h>
+#endif
 #include "libkmod.h"
 #include "libkmod-internal.h"
 

@@ -22,6 +22,7 @@
 #include <getopt.h>
 #include <errno.h>
 #include <string.h>
+#include <libgen.h>
 #include "libkmod.h"
 
 #include "kmod.h"
@@ -33,14 +34,14 @@ static const struct option cmdopts[] = {
 	{NULL, 0, 0, 0}
 };
 
-static void help(void)
+static void help(int argc, char** argv)
 {
 	printf("Usage:\n"
 		"\t%s [options] filename [args]\n"
 		"Options:\n"
 		"\t-V, --version     show version\n"
 		"\t-h, --help        show this help\n",
-		program_invocation_short_name);
+		basename(argv[0]));
 }
 
 static const char *mod_strerror(int err)
@@ -59,7 +60,7 @@ static const char *mod_strerror(int err)
 	}
 }
 
-static int do_insmod(int argc, char *argv[])
+static int do_insmod(int argc, char **argv)
 {
 	struct kmod_ctx *ctx;
 	struct kmod_module *mod;
@@ -81,7 +82,7 @@ static int do_insmod(int argc, char *argv[])
 			/* ignored, for compatibility only */
 			break;
 		case 'h':
-			help();
+			help(argc,argv);
 			return EXIT_SUCCESS;
 		case 'V':
 			puts(PACKAGE " version " VERSION);

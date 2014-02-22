@@ -34,7 +34,9 @@
 #include <assert.h>
 #include <unistd.h>
 #include <ctype.h>
-
+#ifndef _GNU_SOURCE
+#include <libgen.h>
+#endif
 #include "kmod.h"
 
 #define DEFAULT_VERBOSE LOG_WARNING
@@ -68,10 +70,10 @@ static const struct option cmdopts[] = {
 	{ "map", no_argument, 0, 'm' }, /* deprecated */
 	{ "version", no_argument, 0, 'V' },
 	{ "help", no_argument, 0, 'h' },
-	{ }
+	{NULL, 0, 0, 0}
 };
 
-static void help(void)
+static void help(int argc, char **argv)
 {
 	printf("Usage:\n"
 		"\t%s -[aA] [options] [forced_version]\n"
@@ -98,7 +100,7 @@ static void help(void)
 		"\t                     current kernel symbols.\n"
 		"\t-E, --symvers=FILE   Use Module.symvers file to check\n"
 		"\t                     symbol versions.\n",
-		program_invocation_short_name);
+		basename(argv[0]));
 }
 
 _printf_format_(1, 2)
@@ -2458,7 +2460,7 @@ static int is_version_number(const char *version)
 	return (sscanf(version, "%u.%u", &d1, &d2) == 2);
 }
 
-static int do_depmod(int argc, char *argv[])
+static int do_depmod(int argc, char** argv)
 {
 	FILE *out = NULL;
 	int err = 0, all = 0, maybe_all = 0, n_config_paths = 0;
@@ -2541,7 +2543,7 @@ static int do_depmod(int argc, char *argv[])
 
 			break;
 		case 'h':
-			help();
+			help(argc,argv);
 			free(config_paths);
 			return EXIT_SUCCESS;
 		case 'V':

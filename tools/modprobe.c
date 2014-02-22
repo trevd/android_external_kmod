@@ -30,7 +30,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <limits.h>
-
+#include <libgen.h>
 #include "libkmod.h"
 #include "libkmod-array.h"
 #include "macro.h"
@@ -91,8 +91,9 @@ static const struct option cmdopts[] = {
 	{NULL, 0, 0, 0}
 };
 
-static void help(void)
+static void help(int argc, char **argv)
 {
+	char* program_invocation_short_name = basename(argv[0]);
 	printf("Usage:\n"
 		"\t%s [options] [-i] [-b] modulename\n"
 		"\t%s [options] -a [-i] [-b] modulename [modulename...]\n"
@@ -852,7 +853,7 @@ static int do_modprobe(int argc, char **orig_argv)
 			err = 0;
 			goto done;
 		case 'h':
-			help();
+			help(argc,orig_argv);
 			err = 0;
 			goto done;
 		case '?':

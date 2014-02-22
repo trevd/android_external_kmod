@@ -18,6 +18,9 @@
  */
 
 #include <stdio.h>
+#ifndef _GNU_SOURCE
+#include <libgen.h>
+#endif
 #include <stdlib.h>
 #include <errno.h>
 #include <getopt.h>
@@ -46,7 +49,9 @@ static const struct kmod_cmd *kmod_compat_cmds[] = {
 	&kmod_cmd_compat_insmod,
 	&kmod_cmd_compat_modinfo,
 	&kmod_cmd_compat_modprobe,
+#ifdef _GNU_SOURCE
 	&kmod_cmd_compat_depmod,
+#endif
 };
 
 static int kmod_help(int argc, char *argv[])
@@ -160,7 +165,7 @@ int main(int argc, char *argv[])
 {
 	int err;
 
-	if (strcmp(program_invocation_short_name, "kmod") == 0)
+	if (strcmp(basename(argv[0]), "kmod") == 0)
 		err = handle_kmod_commands(argc, argv);
 	else
 		err = handle_kmod_compat_commands(argc, argv);

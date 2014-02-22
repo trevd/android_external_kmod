@@ -24,7 +24,7 @@
 
 #include "libkmod.h"
 #include "kmod.h"
-
+extern const char* __progname;
 static bool log_use_syslog;
 static int log_priority = LOG_ERR;
 
@@ -59,6 +59,10 @@ static _always_inline_ const char *prio_to_str(int prio)
 
 	return prioname;
 }
+#ifdef __ANDROID__
+#undef program_invocation_short_name
+#define program_invocation_short_name __progname
+#endif
 
 _printf_format_(6, 0)
 static void log_kmod(void *data, int priority, const char *file, int line,

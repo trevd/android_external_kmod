@@ -28,7 +28,7 @@
 #include <sys/stat.h>
 #include "libkmod.h"
 #include "libkmod-util.h"
-
+#include <libgen.h>
 #include "kmod.h"
 
 static char separator = '\n';
@@ -326,7 +326,7 @@ static const struct option cmdopts[] = {
 	{NULL, 0, 0, 0}
 };
 
-static void help(void)
+static void help(int argc, char **argv)
 {
 	printf("Usage:\n"
 		"\t%s [options] filename [args]\n"
@@ -342,7 +342,7 @@ static void help(void)
 		"\t-b, --basedir=DIR           Use DIR as filesystem root for /lib/modules\n"
 		"\t-V, --version               Show version\n"
 		"\t-h, --help                  Show this help\n",
-		program_invocation_short_name);
+		basename(argv[0]));
 }
 
 static bool is_module_filename(const char *name)
@@ -356,7 +356,7 @@ static bool is_module_filename(const char *name)
 	return false;
 }
 
-static int do_modinfo(int argc, char *argv[])
+static int do_modinfo(int argc, char** argv)
 {
 	struct kmod_ctx *ctx;
 	char dirname_buf[PATH_MAX];
@@ -400,7 +400,7 @@ static int do_modinfo(int argc, char *argv[])
 			root = optarg;
 			break;
 		case 'h':
-			help();
+			help(argc,argv);
 			return EXIT_SUCCESS;
 		case 'V':
 			puts(PACKAGE " version " VERSION);

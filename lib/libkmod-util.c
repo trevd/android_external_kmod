@@ -22,6 +22,9 @@
 
 #include <assert.h>
 #include <stdio.h>
+#ifndef _GNU_SOURCE
+#include <libgen.h>
+#endif
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdarg.h>
@@ -294,16 +297,15 @@ bool path_is_absolute(const char *p)
 
 char *path_make_absolute_cwd(const char *p)
 {
-	_cleanup_free_ char *cwd = NULL;
+	_cleanup_free_ char *cwd = calloc(1024,sizeof(char));
 	size_t plen, cwdlen;
 	char *r;
 
 	if (path_is_absolute(p))
 		return strdup(p);
 
-	cwd = get_current_dir_name();
-	if (!cwd)
-		return NULL;
+   if (getcwd(cwd, 1024) == NULL)
+           return NULL;
 
 	plen = strlen(p);
 	cwdlen = strlen(cwd);
@@ -334,7 +336,7 @@ int mkdir_p(const char *path, int len, mode_t mode)
 {
 	char *start, *end;
 
-	start = strndupa(path, len);
+	start = strndup(path, len);
 	end = start + len;
 
 	/*
@@ -376,7 +378,7 @@ int mkdir_p(const char *path, int len, mode_t mode)
 		end += strlen(end);
 		*end = '/';
 	}
-
+	if(start)free(start);
 	return 0;
 }
 

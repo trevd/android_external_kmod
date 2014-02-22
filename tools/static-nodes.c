@@ -27,6 +27,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <limits.h>
+#include <libgen.h>
 #include <sys/utsname.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -55,7 +56,7 @@ static const struct option cmdopts[] = {
 	{ "output", required_argument, 0, 'o'},
 	{ "format", required_argument, 0, 'f'},
 	{ "help", no_argument, 0, 'h'},
-	{ },
+		{NULL, 0, 0, 0}
 };
 
 static int write_human(FILE *out, char modname[], char devname[], char type, unsigned int maj, unsigned int min)
@@ -126,7 +127,7 @@ static const struct static_nodes_format static_nodes_format_devname = {
 	.description = "the modules.devname format.",
 };
 
-static void help(void)
+static void help(int argc, char** argv)
 {
 	size_t i;
 
@@ -141,7 +142,7 @@ static void help(void)
 	       "\t-h, --help           show this help\n"
 	       "\n"
 	       "Formats:\n",
-	 program_invocation_short_name);
+	 basename(argv[0]));
 
 	for (i = 0; i < ARRAY_SIZE(static_nodes_formats); i++) {
 		if (static_nodes_formats[i]->description != NULL) {
@@ -151,7 +152,7 @@ static void help(void)
 	}
 }
 
-static int do_static_nodes(int argc, char *argv[])
+static int do_static_nodes(int argc, char** argv)
 {
 	struct utsname kernel;
 	char modules[PATH_MAX], buf[4096];
@@ -185,13 +186,13 @@ static int do_static_nodes(int argc, char *argv[])
 			if (!valid) {
 				fprintf(stderr, "Unknown format: '%s'.\n",
 					optarg);
-				help();
+				help(argc,argv);
 				ret = EXIT_FAILURE;
 				goto finish;
 			}
 			break;
 		case 'h':
-			help();
+			help(argc,argv);
 			goto finish;
 		case '?':
 			ret = EXIT_FAILURE;
@@ -199,7 +200,7 @@ static int do_static_nodes(int argc, char *argv[])
 		default:
 			fprintf(stderr, "Unexpected commandline option '%c'.\n",
 				c);
-			help();
+			help(argc,argv);
 			ret = EXIT_FAILURE;
 			goto finish;
 		}
